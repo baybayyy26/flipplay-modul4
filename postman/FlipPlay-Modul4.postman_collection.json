@@ -1,0 +1,1067 @@
+{
+  "info": {
+    "_postman_id": "fde33971-7e02-4019-86d4-e5496c10f0f5",
+    "name": "FlipPlay API - Modul 4",
+    "description": "Jalankan berurutan setelah `php artisan migrate:fresh --seed` dan `php artisan serve`. Seeder: user 1 baybay, user 2 vibetester, media id 1-7 (Chainsaw Man, Haikyuu!!, Your Lie in April, Frieren, Reply 1988, Fullmetal Alchemist, Toradora!).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Media (CRUD)",
+      "item": [
+        {
+          "name": "GET semua media",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media"
+              ]
+            },
+            "description": "Daftar semua media (paginate 10) - MediaController@index"
+          }
+        },
+        {
+          "name": "GET cari judul (search=man)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media?search=man",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "man"
+                }
+              ]
+            },
+            "description": "Unified Search lewat query scope search()"
+          }
+        },
+        {
+          "name": "GET filter jenis (type=manga)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media?type=manga",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "manga"
+                }
+              ]
+            },
+            "description": "Filter lewat query scope ofType()"
+          }
+        },
+        {
+          "name": "POST tambah media",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.collectionVariables.set(\"new_media_id\", pm.response.json().data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media"
+              ]
+            },
+            "description": "Tambah media baru - lolos MediaRequest -> 201 Created",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Spy x Family\",\n  \"type\": \"anime\",\n  \"genres\": [\n    \"Action\",\n    \"Comedy\",\n    \"Family\"\n  ],\n  \"release_year\": 2022,\n  \"creator\": \"Wit Studio\",\n  \"total_units\": 25\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET detail media baru",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media/{{new_media_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media",
+                "{{new_media_id}}"
+              ]
+            },
+            "description": "Detail satu media (Route Model Binding)"
+          }
+        },
+        {
+          "name": "PATCH ubah rating",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media/{{new_media_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media",
+                "{{new_media_id}}"
+              ]
+            },
+            "description": "Ubah sebagian data (aturan 'sometimes')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 8.4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. My Vibe List (custom action)",
+      "item": [
+        {
+          "name": "GET semua user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Daftar user + vibe_list_count"
+          }
+        },
+        {
+          "name": "POST tambah Frieren ke vibe list baybay",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1/vibe-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                "vibe-list"
+              ]
+            },
+            "description": "Custom action attach() -> baris baru di pivot media_user",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"media_id\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST tambah media baru ke vibe list baybay",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1/vibe-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                "vibe-list"
+              ]
+            },
+            "description": "Custom action attach()",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"media_id\": {{new_media_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET vibe list baybay",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1/vibe-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                "vibe-list"
+              ]
+            },
+            "description": "Isi vibe list + added_to_vibe_list_at (data pivot)"
+          }
+        },
+        {
+          "name": "GET detail user baybay",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1"
+              ]
+            },
+            "description": "User + vibe_list (eager loading, whenLoaded)"
+          }
+        },
+        {
+          "name": "GET detail Frieren (collected_by)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media/4",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media",
+                "4"
+              ]
+            },
+            "description": "Media + daftar user yang menyimpannya"
+          }
+        },
+        {
+          "name": "DELETE hapus media baru dari vibe list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1/vibe-list/{{new_media_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                "vibe-list",
+                "{{new_media_id}}"
+              ]
+            },
+            "description": "Custom action detach() -> baris pivot dihapus"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Failure path",
+      "item": [
+        {
+          "name": "POST media judul kosong -> 422",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 422\", function () { pm.response.to.have.status(422); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media"
+              ]
+            },
+            "description": "Validasi: title required",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"type\": \"anime\",\n  \"genres\": [\n    \"Action\"\n  ],\n  \"release_year\": 2022\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST media judul dobel -> 422",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 422\", function () { pm.response.to.have.status(422); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media"
+              ]
+            },
+            "description": "Validasi: title unique",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Haikyuu!!\",\n  \"type\": \"anime\",\n  \"genres\": [\n    \"Sports\"\n  ],\n  \"release_year\": 2014\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST media data salah -> 422",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 422\", function () { pm.response.to.have.status(422); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media"
+              ]
+            },
+            "description": "Validasi: type, genres, release_year, rating",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test\",\n  \"type\": \"novel\",\n  \"genres\": [],\n  \"release_year\": 1500,\n  \"rating\": 11\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET media tidak ada -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media",
+                "99"
+              ]
+            },
+            "description": "Route Model Binding: id tidak ditemukan"
+          }
+        },
+        {
+          "name": "POST Frieren dua kali -> 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1/vibe-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                "vibe-list"
+              ]
+            },
+            "description": "Media sudah ada di vibe list (modul 4.6)",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"media_id\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST vibe list media_id tidak ada -> 422",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 422\", function () { pm.response.to.have.status(422); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1/vibe-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                "vibe-list"
+              ]
+            },
+            "description": "Validasi: exists:media,id",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"media_id\": 999\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST vibe list body kosong -> 422",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 422\", function () { pm.response.to.have.status(422); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1/vibe-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                "vibe-list"
+              ]
+            },
+            "description": "Validasi: media_id required",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST vibe list user tidak ada -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/99/vibe-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "99",
+                "vibe-list"
+              ]
+            },
+            "description": "Route Model Binding: user tidak ditemukan",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"media_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DELETE media yang tidak ada di vibe list -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1/vibe-list/5",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                "vibe-list",
+                "5"
+              ]
+            },
+            "description": "detach() menghapus 0 baris"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Hapus media",
+      "item": [
+        {
+          "name": "DELETE hapus media baru",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media/{{new_media_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media",
+                "{{new_media_id}}"
+              ]
+            },
+            "description": "MediaController@destroy"
+          }
+        },
+        {
+          "name": "GET media yang sudah dihapus -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media/{{new_media_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media",
+                "{{new_media_id}}"
+              ]
+            },
+            "description": "Bukti media sudah terhapus"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api"
+    },
+    {
+      "key": "new_media_id",
+      "value": "8"
+    }
+  ]
+}
